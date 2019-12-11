@@ -1,2 +1,19 @@
 ---
-#Initial install of ARMA Serv
+- name: Add multiverse repo for 64 bit 
+  apt_repository:
+    repo: multiverse
+
+- name: Add i386 architecture
+  command: dpkg --add-architecture i386
+
+- name: Install dependencies for SteamCMD
+  apt:
+    pkg:
+    - lib32gcc1
+    - lib32stdc++6
+    - steamcmd
+
+- name: Create steam user
+  user:
+    name: steam
+    comment: User for Steam/SteamCMD
