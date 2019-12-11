@@ -1,0 +1,8 @@
+---
+- hosts: armaserver
+  roles:
+    - common
+
+# Associate further roles to servers in specific group in this file...
+
+...
