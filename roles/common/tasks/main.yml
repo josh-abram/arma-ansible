@@ -16,9 +16,36 @@
     pkg:
     - lib32gcc1
     - lib32stdc++6
+    - python
+    - fail2ban
+
+- name: create Arma profiles directory
+  file: path="/home/steam/.local/share/{{ item }}" state=directory
+  with_items:
+    - "Arma 3"
+    - "Arma 3 - Other Profiles"
+    - "Arma 3 - Other Profiles/server"
+  become: yes
+  become_user: steam
 
 - name: unzip steamcmd tar
   unarchive:
-    src: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz #maybe make this a var, but I don't think this changes
-    dest: /home/steamcmd #change this to a better dest
-    remote_src: yes
+    src: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+    dest: /home/steam/steamcmd 
+
+- name: open firewall ports
+  ufw: port={{ item }} permanent=true state=enabled
+  with_items:
+    - 2302/udp # Client
+    - 2303/udp # Steam query
+    - 2304/udp # Steam master
+  become: yes
+  notify:
+    - reload firewall
+
+- name: Run SteamCMD and Install ARMA
+  shell: "./steamcmd.sh +login {{ steam_username }} {{ steam_password }} +force_install_dir ../arma3 +app_update 233780 +quit"
+  args:
+    chdir: /home/steam/steamcmd
+  become: yes
+  become_user: steam
