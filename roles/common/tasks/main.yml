@@ -6,8 +6,7 @@
   user:
     name: steam
     state: present
-    group: primary-group
-    groups: "sudo"
+    password: "{{ steam_user_password }}"
     comment: User for Steam/SteamCMD
 
 - name: install dependencies for SteamCMD
@@ -34,13 +33,19 @@
   unarchive:
     src: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
     dest: /home/steam/steamcmd
+    owner: steam
     remote_src: yes
+
+- name: set steamcmd as executable
+  file:
+    path: /home/steam/steamcmd/steamcmd.sh 
+    mode: +x
 
 - name: open firewall ports
   ufw:
     rule: allow
     port: 2302:2304 #Client, Steam Query, Steam Master
-    proto: udps
+    proto: udp
 
 - name: Run SteamCMD and Install ARMA
   shell: "./steamcmd.sh +login {{ steam_username }} {{ steam_password }} +force_install_dir ../arma3 +app_update 233780 +quit"

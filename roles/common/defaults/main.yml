@@ -1,4 +1,5 @@
 ---
 #Variables to be stored here
 steam_username: 
-steam_password: 
+steam_password:
+steam_user_password: 
