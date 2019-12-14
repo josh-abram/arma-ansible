@@ -10,6 +10,7 @@
 
 - name: install dependencies for SteamCMD
   apt:
+    update_cache: yes
     pkg:
     - lib32gcc1
     - lib32stdc++6
