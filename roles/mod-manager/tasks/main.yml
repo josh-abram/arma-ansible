@@ -1,1 +1,10 @@
 ---
+- name: Copy Mod Manager to Server
+  copy:
+    src: mod-manager.sh
+    dest: /home/steam/
+
+- name: Copy Mod JSON to Server
+  copy:
+    src: mod-manager.sh
+    dest: /home/steam/

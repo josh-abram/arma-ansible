@@ -1,4 +1,4 @@
 ---
-#Variables to be stored here
+#If you're not passing these via the command line, enter them here
 steam_username: 
 steam_password:

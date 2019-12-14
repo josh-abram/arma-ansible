@@ -3,4 +3,4 @@
   roles:
     - arma-server
     - arma-config
-    #-mod-manager
+    - mod-manager

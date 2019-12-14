@@ -1,6 +1,7 @@
 [all:vars]
 ansible_ssh_user=arma
+ansible_python_interpreter=/usr/bin/python3
 
 [armaserver]
-xxx.xxx.xxx.xx ansible_python_interpreter=/usr/bin/python3
+xxx.xxx.xxx.xx 
 
