@@ -32,7 +32,6 @@
   unarchive:
     src: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
     dest: /home/steam/steamcmd
-    owner: steam
     remote_src: yes
 
 - name: set steamcmd as executable
