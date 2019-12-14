@@ -5,6 +5,9 @@
 - name: create steam user
   user:
     name: steam
+    state: present
+    group: primary-group
+    groups: "sudo"
     comment: User for Steam/SteamCMD
 
 - name: install dependencies for SteamCMD
@@ -43,3 +46,5 @@
   shell: "./steamcmd.sh +login {{ steam_username }} {{ steam_password }} +force_install_dir ../arma3 +app_update 233780 +quit"
   args:
     chdir: /home/steam/steamcmd
+  become: yes
+  become_user: steam
