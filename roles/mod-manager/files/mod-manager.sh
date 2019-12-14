@@ -44,13 +44,13 @@ STEAM_USER = "USERNAME"
 # The appid of Arma 3's Dedicated server. You shouldn't need to change this.
 A3_SERVER_ID = "233780"
 # The location that arma3 dedicated server is installed.
-A3_SERVER_DIR = "/home/steam/steamcmd/arma3"
+A3_SERVER_DIR = "/home/steam/arma3"
 # The appid of Arma 3, this is used to get workshop content. You shouldn't need to change this.
 A3_WORKSHOP_ID = "107410"
 # The location for which workshop content will be installed, you shouldn't need to change this.
 A3_WORKSHOP_DIR = "{}/steamapps/workshop/content/{}".format(A3_SERVER_DIR, A3_WORKSHOP_ID)
 # The location the symlinked folders for the mods will be placed, this should be in or below the folder Arma 3 is installed.
-A3_MODS_DIR = "/home/steam/steamcmd/arma3"
+A3_MODS_DIR = "/home/steam/arma3"
 
 ###
 ### Mods are stored in mods.json
