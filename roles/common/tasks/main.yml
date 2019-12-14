@@ -21,8 +21,6 @@
     - "Arma 3"
     - "Arma 3 - Other Profiles"
     - "Arma 3 - Other Profiles/server"
-  become: yes
-  become_user: steam
 
 - name: unzip steamcmd tar
   unarchive:
