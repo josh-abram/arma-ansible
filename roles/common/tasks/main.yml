@@ -6,7 +6,6 @@
   user:
     name: steam
     state: present
-    password: "{{ steam_user_password }}"
     comment: User for Steam/SteamCMD
 
 - name: install dependencies for SteamCMD
