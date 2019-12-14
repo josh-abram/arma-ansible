@@ -1,5 +1,5 @@
 [all:vars]
-ansible_ssh_user = arma #set to your sudo user
+ansible_ssh_user=arma #set to your sudo user
 
 [armaserver]
 xxx.xxx.xxx.xx ansible_python_interpreter=/usr/bin/python3
