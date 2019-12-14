@@ -25,7 +25,8 @@
 - name: unzip steamcmd tar
   unarchive:
     src: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
-    dest: /home/steam/steamcmd 
+    dest: /home/steam/steamcmd
+    remote_src: yes
 
 - name: open firewall ports
   ufw: port={{ item }} permanent=true state=enabled
