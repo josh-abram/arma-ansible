@@ -1,9 +1,6 @@
 ---
 - hosts: armaserver
   roles:
-    - common
+    - arma-server
+    - arma-config
     #-mod-manager
-
-# Associate further roles to servers in specific group in this file...
-
-...

@@ -1,0 +1,5 @@
+---
+- name: Copy ARMA config file to server
+  copy:
+    src: server.cfg
+    dest: /home/steam/arma3
