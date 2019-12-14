@@ -1,4 +1,7 @@
-# arma-ansible
+# arma-automation
+
+![arma-automation-logo](https://puu.sh/EPniq/c906edd668.png)
+
 Ansible Template and Roles for automating the setup of an ARMA 3 Server
 Note: Supports Ubuntu 18.04 only
 
