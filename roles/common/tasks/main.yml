@@ -1,10 +1,6 @@
 ---
-- name: Add multiverse repo for 64 bit 
-  apt_repository:
-    repo: multiverse
-
 - name: Add i386 architecture
-  command: dpkg --add-architecture i386
+  shell: dpkg --add-architecture i386
 
 - name: Create steam user
   user:
