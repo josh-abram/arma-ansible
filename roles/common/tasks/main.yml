@@ -1,13 +1,13 @@
 ---
-- name: Add i386 architecture
+- name: add i386 architecture
   shell: dpkg --add-architecture i386
 
-- name: Create steam user
+- name: create steam user
   user:
     name: steam
     comment: User for Steam/SteamCMD
 
-- name: Install dependencies for SteamCMD
+- name: install dependencies for SteamCMD
   apt:
     pkg:
     - lib32gcc1
@@ -22,6 +22,11 @@
     - "Arma 3 - Other Profiles"
     - "Arma 3 - Other Profiles/server"
 
+- name: create steamcmd dir
+  file:
+    path: /home/steam/steamcmd
+    state: directory
+
 - name: unzip steamcmd tar
   unarchive:
     src: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
@@ -29,18 +34,12 @@
     remote_src: yes
 
 - name: open firewall ports
-  ufw: port={{ item }} permanent=true state=enabled
-  with_items:
-    - 2302/udp # Client
-    - 2303/udp # Steam query
-    - 2304/udp # Steam master
-  become: yes
-  notify:
-    - reload firewall
+  ufw:
+    rule: allow
+    port: 2302:2304 #Client, Steam Query, Steam Master
+    proto: udps
 
 - name: Run SteamCMD and Install ARMA
   shell: "./steamcmd.sh +login {{ steam_username }} {{ steam_password }} +force_install_dir ../arma3 +app_update 233780 +quit"
   args:
     chdir: /home/steam/steamcmd
-  become: yes
-  become_user: steam
