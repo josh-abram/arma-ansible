@@ -8,7 +8,7 @@
     state: present
     comment: User for Steam/SteamCMD
 
-- name: install dependencies for SteamCMD
+- name: install dependencies for SteamCMD and other useful packages
   apt:
     update_cache: yes
     pkg:
@@ -16,6 +16,8 @@
     - lib32stdc++6
     - python
     - fail2ban
+    - htop
+    - nethogs
 
 - name: create Arma profiles directory
   file: path="/home/steam/.local/share/{{ item }}" state=directory
