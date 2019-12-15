@@ -17,7 +17,7 @@ BattlEye = {{Arma3Server_EnableBattleEye}};					// Server to use BattlEye system
 // It can be several lines, separated by comma
 // Empty messages "" will not be displayed at all but are only for increasing the interval
 motd[] = {{Arma3Server_MOTD}};
-motdInterval = {{MOTDInterval}};				// Time interval (in seconds) between each message
+motdInterval = {{Arma3Server_MOTDInterval}};				// Time interval (in seconds) between each message
 
 
 // Joining Settings
@@ -38,7 +38,7 @@ voteMissionPlayers = {{Arma3Server_MissionPlayers}};				// Tells the server how 
 voteThreshold = {{Arma3Server_VoteThreshold}};				// 33% or more players need to vote for something, for example an admin or a new map, to become effective
 
 // Voice Over Network Settings
-disableVoN = {{Arma3Server_VonEnabled_Fix}};					// If set to 1, Voice over Net will not be available
+disableVoN = {{Arma3Server_VonEnabled}};					// If set to 1, Voice over Net will not be available
 vonCodec = {{Arma3Server_VonCodec}}; 					// If set to 1 then it uses IETF standard OPUS codec, if to 0 then it uses SPEEX codec (since Arma 3 update 1.58+)  
 vonCodecQuality = {{Arma3Server_VonQuality}};				// since 1.62.95417 supports range 1-20 //since 1.63.x will supports range 1-30 //8kHz is 0-10, 16kHz is 11-20, 32kHz(48kHz) is 21-30 
 

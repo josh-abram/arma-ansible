@@ -14,7 +14,7 @@ Arma3Server_ServerCommandPassword:  # Password required by alternate syntax of s
 Arma3Server_LogFile: server_console.log # Location and name of server logfile.
 # # # Message of the Day, Displayed when users join the server.
 # # Empty Messages will increase the interval between messages further, each message will be displayed on its own line.
-Arma3Server_MOTD: " "","","Welcome to the Server!","You can edit this message!","","" "
+Arma3Server_MOTD: "Welcome to the Server!"
 Arma3Server_MOTDInterval: 5 # Seconds between messages (I don't actually know if this is a real thing, there is no documentation for this command online?)
 Arma3Server_EnableMissionPersistance: 1 # Missions will continue to run even when no players are online.
 Arma3Server_EnableBattleEye: 1 # Server will use BattleEye
@@ -30,7 +30,7 @@ Arma3Server_AllowFilePatching: 0 # Enable or disable file patching for clients. 
 #                                # 0 = Disabled for all clients.
 #                                # 1 = Enabled only for Headless clients.
 #                                # 2 = Enabled for all clients.
-Arma3Server_FilePatchingExceptions: ""123456789","987654321"" # Steam ID's that are allowed to join with -filePatching enabled.
+Arma3Server_FilePatchingExceptions: [123456789,987654321] # Steam ID's that are allowed to join with -filePatching enabled.
 
 ## Mission Settings
 Arma3Server_EnableRandomMissionOrder: true # Randomly iterate through mission rotation list, only matters if you have a mission list set.
@@ -44,16 +44,12 @@ Arma3Server_VoteThreshold: 0.33 # Percentage of players needed for a Vote to pas
 
 ## Voice Over Network Settings
 Arma3Server_VonEnabled: 1
-          when: "{{Arma3Server_VonEnabled}}" == 1
-                Arma3Server_VonEnabled_Fix: 0
-          when: "{{Arma3Server_VonEnabled}}" == 0
-                Arma3Server_VonEnabled_Fix: 1
 Arma3Server_VonCodec: 1 # The VON Codec that will be used. For Example:
 #                       # 0 = SPEEX Codec
 #                       # 1 = IETF Standard OPUS Codec
 Arma3Server_VonQuality: 30 # Quality of VON.
 #                          # 0-10 = 8kHz.
-#                          # 11-20 = 16kHz.
+#                          # 11-20 = 16kHz. 
 #                          # 21-30 = 48kHz.
 
 ## Timeout Settings
@@ -92,14 +88,14 @@ Arma3Server_OnUserDisconnected: "" # What to do when user disconnects.
 Arma3Server_OnDoubleIdDetected: "" # What to do when two users have the same ID are detected. 
 
 ## Misc Settings
-Arma3Server_AllowedLoadFileExtensions: ""hpp","sqs","sqf","fsm","cpp","paa","txt","xml","inc","ext","sqm","ods","fxy","lip","csv","kb","bik","bikb","html","htm","biedi""
+Arma3Server_AllowedLoadFileExtensions: [hpp,sqs,sqf,fsm,cpp,paa,txt,xml,inc,ext,sqm,ods,fxy,lip,csv,kb,bik,bikb,html,htm,biedi]
 #          # Only allow files with those extensions to be loaded via loadFile command.
-Arma3Server_AllowedPreprocessFileExtensions: ""hpp","sqs","sqf","fsm","cpp","paa","txt","xml","inc","ext","sqm","ods","fxy","lip","csv","kb","bik","bikb","html","htm","biedi""
+Arma3Server_AllowedPreprocessFileExtensions: [hpp,sqs,sqf,fsm,cpp,paa,txt,xml,inc,ext,sqm,ods,fxy,lip,csv,kb,bik,bikb,html,htm,biedi]
 #          # Only allow files with listed extensions to be loaded via preprocessFile / preprocessFileLineNumbers commands.
-Arma3Server_AllowedHTMLLoadExtensions: ""htm","html","xml","txt""
+Arma3Server_AllowedHTMLLoadExtensions: [htm,html,xml,txt]
 #          # Only allow files and URLs with listed extensions to be loaded via htmlLoad command.
-Arma3Server_TimeStampFormat: "short" # Set the timestamp format used on each report line in server-side RPT file. 
+Arma3Server_TimeStampFormat: short # Set the timestamp format used on each report line in server-side RPT file. 
 #                            # Possible values are:
-#                            # "none" (defualt)
+#                            # "none" (default)
 #                            # "short"
 #                            # "full"
