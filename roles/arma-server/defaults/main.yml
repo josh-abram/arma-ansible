@@ -1,4 +1,5 @@
 ---
-#If you're not passing these via the command line, enter them here
-steam_username: 
-steam_password:
+steamcmd_user: steam
+steamcmd_user_home: /home/{{ steamcmd_user }}/
+steamcmd_directory: /home/{{ steamcmd_user }}/steamcmd/
+steamcmd_login_timeout: 120

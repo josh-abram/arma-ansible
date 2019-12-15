@@ -1,5 +1,8 @@
 ---
-- name: Copy ARMA config file to server
-  copy:
-    src: server.cfg
-    dest: /home/steam/arma3
+- name: create arma 3 server configuration file
+  template:
+    src: config.cfg.j2
+    dest: "{{ steamcmd_user_home }}config.cfg"
+    owner: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"
+    mode: '0600'

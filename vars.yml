@@ -1,0 +1,39 @@
+---
+# Steam account credentials
+steam_username: # Steam account that owns ARMA3
+steam_password: # Steam account password
+
+# Arma server config:
+arma_servername: Arma Server built with ArmaAutomation # Name of your Arma Server
+arma_pass: ArmaAutomation # Your server password
+server_public_name: "My ArmA Server"
+server_password: doll
+admin_password: adminadmin
+command_password: nope
+
+maxPlayers: 64
+kickDuplicate: 1
+verifySignatures: 2
+allowedFilePatching: 1
+
+# add steam64IDs here
+a3_admins: []
+
+headlessClients:
+  - 127.0.0.1
+
+localClients:
+  - 127.0.0.1
+
+voteMissionPlayers: 1
+voteThreshold: 0.33
+forceRotorLibSimulation: 0
+disableVoN: 1
+vonCodec: 0
+vonCodecQuality: 0
+persistent: 0
+BattlEye: 1
+drawingInMap: 1
+maxdesync: 150
+maxping: 200
+maxpacketloss: 50
