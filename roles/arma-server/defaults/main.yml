@@ -1,4 +1,101 @@
 ---
-#If you're not passing these via the command line, enter them here
-steam_username: 
-steam_password:
+steamcmd_user: steam
+steamcmd_user_home: /home/{{ steamcmd_user }}/
+steamcmd_directory: /home/{{ steamcmd_user }}/steamcmd/
+steam_server_directory: /home/{{ steamcmd_user }}/arma3/
+
+### Arma 3 Server Settings ###
+
+## Basic Settings
+Arma3Server_HostName: Arma 3 Automation Server # Servername visible in the game browser.
+Arma3Server_Password: '' # Password required to connect to server. 
+Arma3Server_AdminPassword:  # Password to protect admin access. (#login)
+Arma3Server_ServerCommandPassword:  # Password required by alternate syntax of serverCommand server-side scripting. 
+Arma3Server_LogFile: server_console.log # Location and name of server logfile.
+# # # Message of the Day, Displayed when users join the server.
+# # Empty Messages will increase the interval between messages further, each message will be displayed on its own line.
+Arma3Server_MOTD: "Welcome to the Server!"
+Arma3Server_MOTDInterval: 5 # Seconds between messages (I don't actually know if this is a real thing, there is no documentation for this command online?)
+Arma3Server_EnableMissionPersistance: 1 # Missions will continue to run even when no players are online.
+Arma3Server_EnableBattleEye: 1 # Server will use BattleEye
+
+## Joining Settings
+Arma3Server_MaxPlayers: 64 # Max number of players connected to the server.
+Arma3Server_KickDuplicate: 1 # Every Arma Account has it's own unique ID, if enabled another user connecting with the same UID will get kicked.
+Arma3Server_VerifySignatures: 2 # Verifies .pbo files (mods normally) against .bisign keys. Options are:
+#                               # 0 = Verification Disabled.
+#                               # 1 = Depreciated, will treated like 2 if input.
+#                               # 2 = Verification Enabled.
+Arma3Server_AllowFilePatching: 0 # Enable or disable file patching for clients. Options are:
+#                                # 0 = Disabled for all clients.
+#                                # 1 = Enabled only for Headless clients.
+#                                # 2 = Enabled for all clients.
+Arma3Server_FilePatchingExceptions: "'123456789','987654321'" # Steam ID's that are allowed to join with -filePatching enabled.
+
+## Mission Settings
+Arma3Server_EnableRandomMissionOrder: true # Randomly iterate through mission rotation list, only matters if you have a mission list set.
+Arma3Server_AutoSelectNextMission: true # Server automatically moves to the next mission after a mission finishes, only matters if you have a mission list set.
+Arma3Server_MissionWhitelist: '' # This being empty means there will be no mission rotation.
+Arma3Server_MissionRotationList: '' # This being empty means there are no restrictions on what missions can be selected.
+
+## Voting Settings
+Arma3Server_MissionPlayers: 1 # Number of players that need to be on the server before a mission can start.
+Arma3Server_VoteThreshold: 0.33 # Percentage of players needed for a Vote to pass.
+
+## Voice Over Network Settings
+Arma3Server_VonEnabled: 1
+Arma3Server_VonCodec: 1 # The VON Codec that will be used. For Example:
+#                       # 0 = SPEEX Codec
+#                       # 1 = IETF Standard OPUS Codec
+Arma3Server_VonQuality: 30 # Quality of VON.
+#                          # 0-10 = 8kHz.
+#                          # 11-20 = 16kHz. 
+#                          # 21-30 = 48kHz.
+
+## Timeout Settings
+Arma3Server_KickOnSlowNetwork: "0, 0, 0, 0" # Defines what will happen when a user has slow network connectivity.
+#                                           # 0 = Logged to console.
+#                                           # 1 = Kicked.
+#                                           # [0, 0, 0, 0] = [MaxPingTimeout, MaxPacketLossTimeout, MaxDesyncTimeout, DisconnectTimeout]
+Arma3Server_MaxPingTimeout: 200 # Maximum ping to trigger Arma3Server_KickOnSlowNetwork, and trigger its setting for MaxPingTimeout.
+Arma3Server_MaxPacketLossTimeout: 50 # Maximum packet loss to trigger Arma3Server_KickOnSlowNetwork, and trigger its setting for MaxPacketLossTimeout.
+Arma3Server_MaxDesyncTimeout: 150 # Maximum desync value to trigger Arma3Server_KickOnSlowNetwork, and trigger its setting for MaxDesyncTimeout.
+Arma3Server_DisconnectTimeout: 5 # Number of seconds before triggering Arma3Server_KickOnSlowNetwork, and to trigger its setting for DisconnectTimeout.
+#                                # Range is 5 - 90.
+Arma3Server_RejoinTimeout: "{0, -1}, {1, 180}, {2, 180}, {3, 180}" 
+# This determines how quickly players who are kicked can rejoin. Syntax is { {kickID, timout}, {kickID, timout}... } etc.
+#           # There are options for four types of kicks (kickID):
+#           # # 0 = Manual kick (vote kick, admin kick, bruteforce detection etc.)
+#           # # 1 = Connectivity kick (ping, timeout, packetloss, desync)
+#           # # 2 = BattlEye kick
+#           # # 3 = Harmless kick (wrong addons, steam timeout or checks, signatures, content etc.)
+#           # There are three possible ways to set the timeout:
+#           # # 0 or any number larger = The user cannot rejoin untill that many seconds have passed.
+#           # # -1 = The user cannot rejoin untill the end of the round.
+#           # # -2 = The user cannot rejoin untill the server restarts.
+Arma3Server_VotingIdleTimeout: "60, 90" # How long in seconds mission voting lasts. Syntax is "ready, notready"
+Arma3Server_RoleSelectionIdleTimeout: "90, 120" # How long in seconds  role selection lasts. Syntax is "ready, notready"
+Arma3Server_BriefingIdleTimeout: "60, 90" # How long in seconds briefing lasts. Syntax is "ready, notready"
+Arma3Server_DebriefingIdleTimeout: "45, 60" # How long in seconds debriefing lasts. Syntax is "ready, notready"
+Arma3Server_LobbyIdleTimeout: "300" # Max time in seconds that can be spent in lobby.
+
+## Script Settings
+Arma3Server_OnUnsignedData: "kick (_this select 0)" # What to do when user is detected using unsigned data.
+Arma3Server_OnHackedData: "kick (_this select 0)" # What to do when user is detected using hacked data.
+Arma3Server_OnDifferentData: "" # What to do when user is detected using different data.
+Arma3Server_OnUserConnected: "" # What to do when user connects.
+Arma3Server_OnUserDisconnected: "" # What to do when user disconnects.
+Arma3Server_OnDoubleIdDetected: "" # What to do when two users have the same ID are detected. 
+
+## Misc Settings
+Arma3Server_AllowedLoadFileExtensions: '"hpp","sqs","sqf","fsm","cpp","paa","txt","xml","inc","ext","sqm","ods","fxy","lip","csv","kb","bik","bikb","html","htm","biedi"'
+#          # Only allow files with those extensions to be loaded via loadFile command.
+Arma3Server_AllowedPreprocessFileExtensions: '"hpp","sqs","sqf","fsm","cpp","paa","txt","xml","inc","ext","sqm","ods","fxy","lip","csv","kb","bik","bikb","html","htm","biedi"'
+#          # Only allow files with listed extensions to be loaded via preprocessFile / preprocessFileLineNumbers commands.
+Arma3Server_AllowedHTMLLoadExtensions: '"htm","html","xml","txt"'
+#          # Only allow files and URLs with listed extensions to be loaded via htmlLoad command.
+Arma3Server_TimeStampFormat: short # Set the timestamp format used on each report line in server-side RPT file. 
+#                            # Possible values are:
+#                            # "none" (default)
+#                            # "short"
+#                            # "full"

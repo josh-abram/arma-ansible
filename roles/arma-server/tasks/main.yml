@@ -2,9 +2,9 @@
 - name: add i386 architecture
   shell: dpkg --add-architecture i386
 
-- name: create steam user
+- name: create user for steamcmd
   user:
-    name: steam
+    name: "{{ steamcmd_user }}"
     state: present
     comment: User for Steam/SteamCMD
 
@@ -19,27 +19,27 @@
     - htop
     - nethogs
 
-- name: create Arma profiles directory
-  file: path="/home/steam/.local/share/{{ item }}" state=directory
+- name: create Arma profiles directorys
+  file: path="{{ steamcmd_user_home }}.local/share/{{ item }}" state=directory
   with_items:
     - "Arma 3"
     - "Arma 3 - Other Profiles"
     - "Arma 3 - Other Profiles/server"
 
-- name: create steamcmd dir
+- name: create steamcmd directory
   file:
-    path: /home/steam/steamcmd
+    path: "{{ steamcmd_directory }}"
     state: directory
 
 - name: unzip steamcmd tar
   unarchive:
     src: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
-    dest: /home/steam/steamcmd
+    dest: "{{ steamcmd_directory }}"
     remote_src: yes
 
 - name: set steamcmd as executable
   file:
-    path: /home/steam/steamcmd/steamcmd.sh 
+    path: "{{ steamcmd_directory }}steamcmd.sh"
     mode: +x
 
 - name: open firewall ports
@@ -48,7 +48,7 @@
     port: 2302:2304 #Client, Steam Query, Steam Master
     proto: udp
 
-- name: Run SteamCMD and Install ARMA
-  shell: "./steamcmd.sh +login {{ steam_username }} {{ steam_password }} +force_install_dir ../arma3 +app_update 233780 +quit"
+- name: Run SteamCMD and Install ARMA (Will take a long time on first run)
+  shell: "./steamcmd.sh +login {{ steam_username }} {{ steam_password }} +force_install_dir {{ steam_server_directory }} +app_update 233780 +quit"
   args:
-    chdir: /home/steam/steamcmd
+    chdir: "{{ steamcmd_directory }}"
