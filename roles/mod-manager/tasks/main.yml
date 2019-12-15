@@ -2,9 +2,9 @@
 - name: Copy Mod Manager to Server
   copy:
     src: mod-manager.sh
-    dest: " {{ steam_server_directory }} "
+    dest: "{{ steam_server_directory }}mod-manager.sh"
 
 - name: Copy Mod JSON to Server
   copy:
-    src: mod-manager.sh
-    dest: " {{ steam_server_directory }} "
+    src: mods.json
+    dest: "{{ steam_server_directory }}mods.json"
