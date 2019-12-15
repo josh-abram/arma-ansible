@@ -2,4 +2,4 @@
 steamcmd_user: steam
 steamcmd_user_home: /home/{{ steamcmd_user }}/
 steamcmd_directory: /home/{{ steamcmd_user }}/steamcmd/
-steamcmd_login_timeout: 120
+steam_server_directory: /home/{{ steamcmd_user }}/arma3/
