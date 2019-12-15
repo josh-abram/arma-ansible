@@ -16,7 +16,7 @@ BattlEye = {{Arma3Server_EnableBattleEye}};					// Server to use BattlEye system
 // WELCOME MESSAGE ("message of the day")
 // It can be several lines, separated by comma
 // Empty messages "" will not be displayed at all but are only for increasing the interval
-motd[] = {{Arma3Server_MOTD}};
+motd[] = "{{Arma3Server_MOTD}}";
 motdInterval = {{Arma3Server_MOTDInterval}};				// Time interval (in seconds) between each message
 
 
@@ -25,7 +25,7 @@ maxPlayers = {{Arma3Server_MaxPlayers}};				// Maximum amount of players. Civili
 kickDuplicate = {{Arma3Server_KickDuplicate}};				// Each ArmA version has its own ID. If kickDuplicate is set to 1, a player will be kicked when he joins a server where another player with the same ID is playing.
 verifySignatures = {{Arma3Server_VerifySignatures}};				// Verifies .pbos against .bisign files. Valid values 0 (disabled), 1 (prefer v2 sigs but accept v1 too) and 2 (only v2 sigs are allowed). 
 allowedFilePatching = {{Arma3Server_AllowFilePatching}};                        // Allow or prevent client using -filePatching to join the server. 0, is disallow, 1 is allow HC, 2 is allow all clients (since Arma 3 1.49+)
-filePatchingExceptions[] = { {{Arma3Server_FilePatchingExceptions}} }; // Whitelisted Steam IDs allowed to join with -filePatching enabled 
+filePatchingExceptions[] = {{{Arma3Server_FilePatchingExceptions}}}; // Whitelisted Steam IDs allowed to join with -filePatching enabled 
 
 // Mission Settings
 randomMissionOrder = {{Arma3Server_EnableRandomMissionOrder}}; // Randomly iterate through Missions list

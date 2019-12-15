@@ -30,7 +30,7 @@ Arma3Server_AllowFilePatching: 0 # Enable or disable file patching for clients. 
 #                                # 0 = Disabled for all clients.
 #                                # 1 = Enabled only for Headless clients.
 #                                # 2 = Enabled for all clients.
-Arma3Server_FilePatchingExceptions: [123456789,987654321] # Steam ID's that are allowed to join with -filePatching enabled.
+Arma3Server_FilePatchingExceptions: ['123456789','987654321'] # Steam ID's that are allowed to join with -filePatching enabled.
 
 ## Mission Settings
 Arma3Server_EnableRandomMissionOrder: true # Randomly iterate through mission rotation list, only matters if you have a mission list set.
@@ -88,11 +88,11 @@ Arma3Server_OnUserDisconnected: "" # What to do when user disconnects.
 Arma3Server_OnDoubleIdDetected: "" # What to do when two users have the same ID are detected. 
 
 ## Misc Settings
-Arma3Server_AllowedLoadFileExtensions: [hpp,sqs,sqf,fsm,cpp,paa,txt,xml,inc,ext,sqm,ods,fxy,lip,csv,kb,bik,bikb,html,htm,biedi]
+Arma3Server_AllowedLoadFileExtensions: ["hpp","sqs","sqf","fsm","cpp","paa","txt","xml","inc","ext","sqm","ods","fxy","lip","csv","kb","bik","bikb","html","htm","biedi"]
 #          # Only allow files with those extensions to be loaded via loadFile command.
-Arma3Server_AllowedPreprocessFileExtensions: [hpp,sqs,sqf,fsm,cpp,paa,txt,xml,inc,ext,sqm,ods,fxy,lip,csv,kb,bik,bikb,html,htm,biedi]
+Arma3Server_AllowedPreprocessFileExtensions: ["hpp","sqs","sqf","fsm","cpp","paa","txt","xml","inc","ext","sqm","ods","fxy","lip","csv","kb","bik","bikb","html","htm","biedi"]
 #          # Only allow files with listed extensions to be loaded via preprocessFile / preprocessFileLineNumbers commands.
-Arma3Server_AllowedHTMLLoadExtensions: [htm,html,xml,txt]
+Arma3Server_AllowedHTMLLoadExtensions: ["htm","html","xml","txt"]
 #          # Only allow files and URLs with listed extensions to be loaded via htmlLoad command.
 Arma3Server_TimeStampFormat: short # Set the timestamp format used on each report line in server-side RPT file. 
 #                            # Possible values are:
