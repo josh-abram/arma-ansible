@@ -3,6 +3,22 @@
   become: yes
   vars_files:
     - vars.yml
+
+  vars_prompt:
+    - name: "steam_username"
+      prompt: "Enter your Steam Username Now"
+      private: no
+      default: "{{ steam_username_plaintext }}" # This default is only if you want to hardcode your username. Do so in vars.yml.
+    
+    - name: "steam_password"
+      prompt: "Enter your Steam Password Now"
+      private: yes
+      default: "{{ steam_password_plaintext }}" # This default is only if you want to hardcode your password. Do so in vars.yml.
+    
+    - name: "steam_guard"
+      prompt: "If you have one, enter your Steam Guard Code Now" # This default is only if you want to hardcode your password.
+      private: no
+
   roles:
     - arma-server
     - arma-config

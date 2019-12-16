@@ -49,6 +49,6 @@
     proto: udp
 
 - name: Run SteamCMD and Install ARMA (Will take a long time on first run)
-  shell: "./steamcmd.sh +login {{ steam_username }} {{ steam_password }} +force_install_dir {{ steam_server_directory }} +app_update 233780 +quit"
+  shell: "./steamcmd.sh +login {{ steam_username }} {{ steam_password }} {{steam_guard}} +force_install_dir {{ steam_server_directory }} +app_update 233780 +quit"
   args:
     chdir: "{{ steamcmd_directory }}"
