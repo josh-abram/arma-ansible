@@ -13,7 +13,7 @@
     - name: "steam_password"
       prompt: "Enter your Steam Password Now"
       private: yes
-      default: "{{ steam_password_plaintext }}""
+      default: "{{ steam_password_plaintext }}"
     
     - name: "steam_guard"
       prompt: "If you have one, enter your Steam Guard Code Now" # This default is only if you want to hardcode your password.
