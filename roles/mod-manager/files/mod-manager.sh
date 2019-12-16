@@ -268,7 +268,7 @@ lowercase_workshop_dir()
 log("Creating symlinks...")
 create_mod_symlinks()
 
-print("Symlinking Keys...")
+log("Symlinking Keys...")
 symlink_mod_keys()
 
 log("Here is a server starting command: ")
