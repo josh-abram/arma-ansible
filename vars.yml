@@ -1,7 +1,7 @@
 ---
 # Steam account credentials
-steam_username: # Steam account that owns ARMA3
-steam_password: # Steam account password
+steam_password_plaintext: "" # Steam account password
+steam_username_plaintext: "" # Steam account username
 
 # Arma server config:
 Arma3Server_HostName:  # Servername visible in the game browser.

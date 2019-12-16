@@ -3,6 +3,22 @@
   become: yes
   vars_files:
     - vars.yml
+  
+  vars_prompt:
+    - name: "steam_username"
+      prompt: "Enter your Steam Username Now"
+      private: no
+      defualt: {{ steam_username_plaintext }}
+    
+    - name: "steam_password"
+      prompt: "Enter your Steam Password Now"
+      private: yes
+      defualt: {{ steam_password_plaintext }}
+    
+    - name: "steam_guard"
+      prompt: "If you have one, enter your Steam Guard Code Now"
+      private: no
+
   roles:
     - arma-server
     - arma-config
