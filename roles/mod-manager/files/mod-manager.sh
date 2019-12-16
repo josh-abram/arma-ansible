@@ -51,6 +51,8 @@ A3_WORKSHOP_ID = "107410"
 A3_WORKSHOP_DIR = "{}/steamapps/workshop/content/{}".format(A3_SERVER_DIR, A3_WORKSHOP_ID)
 # The location the symlinked folders for the mods will be placed, this should be in or below the folder Arma 3 is installed.
 A3_MODS_DIR = "/home/steam/arma3"
+# The location for mod keys to be placed.
+A3_KEYS_DIR = "{}/keys".format(A3_SERVER_DIR)
 
 ###
 ### Mods are stored in mods.json
@@ -189,10 +191,8 @@ def update_mods():
         if tries >= 10:
             log("!! Updating {} failed after {} tries !!".format(mod_name, tries))
 
-
 def lowercase_workshop_dir():
     os.system("(cd {} && find . -depth -exec rename -v 's/(.*)\/([^\/]*)/$1\/\L$2/' {{}} \;)".format(A3_WORKSHOP_DIR))
-
 
 def create_mod_symlinks():
     for mod_name, mod_id in MODS.items():
@@ -215,6 +215,40 @@ def get_starting_params():
     starter = starter + modstring + "\""
     print (starter)
 
+## Creates symlinks to keys, heavily based off:
+## https://gist.github.com/Freddo3000/a5cd0494f649db75e43611122c9c3f15 by https://gist.github.com/Freddo3000
+def symlink_mod_keys():
+    mods_folders = os.listdir(A3_MODS_DIR)
+    print("\n Checking if current keys are valid.")
+    for key in os.listdir(A3_KEYS_DIR):
+        key_dir = "{}/{}".format(A3_KEYS_DIR, key)
+        if os.path.islink(key_dir) and not os.path.exists(key_dir):
+            print("Unlinking old key, {}".format(key))
+            os.unlink(key_dir)
+        else:
+            print("The key {} is valid.".format(key))
+    print("\n Creating key symlinks.")
+    for folder in mods_folders:
+        modname = folder
+        if "@" not in folder:
+            mods_folders.remove(folder)
+        else:
+            folder = "{}/{}/keys/".format(A3_MODS_DIR, folder)
+            if os.path.exists(folder):
+                key_folder_list = os.listdir(folder)
+                for item in key_folder_list:
+                    if ".bikey" not in item[-6:]:
+                        key_folder_list.remove
+                    else:
+                        folder = folder + item
+                        key_path = "{}/{}".format(A3_KEYS_DIR, item)
+                        if not os.path.exists(key_path):
+                            print("Trying to create Key Symlink for {}, key file is called {}".format(modname, item))
+                            os.symlink(folder, key_path)
+                        else:
+                            print("The key for {} already exists.".format(modname))
+            else:
+                print("\n ! The keys folder for {} doesn't exist. \n".format(modname))
 
 log("Updating A3 server ({})".format(A3_SERVER_ID))
 update_server()
@@ -233,6 +267,9 @@ lowercase_workshop_dir()
 
 log("Creating symlinks...")
 create_mod_symlinks()
+
+print("Symlinking Keys...")
+symlink_mod_keys()
 
 log("Here is a server starting command: ")
 get_starting_params()
