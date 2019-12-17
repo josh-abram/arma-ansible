@@ -60,3 +60,9 @@
     #owner: "{{ steamcmd_user }}"
     #group: "{{ steamcmd_user }}"
     #mode: '0600'
+
+- name: Starting ARMA3 service
+  service: 
+    name: arma3server
+    enabled: yes
+    state: restarted
