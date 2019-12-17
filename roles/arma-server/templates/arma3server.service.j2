@@ -4,7 +4,7 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-ExecStart={{ steam_server_directory }}arma3server.sh
+ExecStart={{ steam_server_directory }}arma3server.sh "`cat launchparam.cfg`" 
 User={{ steamcmd_user }}
 
 [Install]
