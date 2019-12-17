@@ -213,6 +213,9 @@ def get_starting_params():
         modstring = modstring + mod_name + ";"
     modstring = modstring[:-1]
     starter = starter + modstring + "\""
+    f = open( 'arma3server.sh', 'w' )
+    f.write(str(starter))
+    f.close()
     print (starter)
 
 ## Creates symlinks to keys, heavily based off:

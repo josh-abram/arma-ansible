@@ -14,7 +14,7 @@
     pkg:
     - lib32gcc1
     - lib32stdc++6
-    - python
+    - python3
     - fail2ban
     - htop
     - nethogs
@@ -52,3 +52,11 @@
   shell: "./steamcmd.sh +login {{ steam_username }} {{ steam_password }} {{steam_guard}} +force_install_dir {{ steam_server_directory }} +app_update 233780 +quit"
   args:
     chdir: "{{ steamcmd_directory }}"
+
+- name: Building ARMA3 service file to /etc/systemd/system
+  template:
+    src: arma3server.service.j2
+    dest: "/etc/systemd/system/arma3server.service"
+    #owner: "{{ steamcmd_user }}"
+    #group: "{{ steamcmd_user }}"
+    #mode: '0600'
