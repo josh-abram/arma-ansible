@@ -16,6 +16,7 @@
     - lib32stdc++6
     - python3
     - fail2ban
+    - rename
     - htop
     - nethogs
 
@@ -65,4 +66,4 @@
   service: 
     name: arma3server
     enabled: yes
-    state: restarted
+    state: reloaded
