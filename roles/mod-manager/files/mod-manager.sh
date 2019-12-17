@@ -33,15 +33,24 @@ import six
 import shutil
 import time
 import datetime as dt
+import argparse
 
 from datetime import datetime
 from urllib import request
+
+# Parse parameters.
+parser = argparse.ArgumentParser(description='Downloads Mods.')
+parser.add_argument('-p', action='store', dest='password_param',
+                    help='Provide password')
+results = parser.parse_args()
 
 ## Configuration information:
 # The location of your steamcmd install.
 STEAM_CMD = "/home/steam/steamcmd/steamcmd.sh"
 # Your steam username.
 STEAM_USER = "USERNAME"
+# Your steam account password.
+STEAM_PASS = ""
 # The appid of Arma 3's Dedicated server. You shouldn't need to change this.
 A3_SERVER_ID = "233780"
 # The location that arma3 dedicated server is installed.
@@ -99,9 +108,21 @@ def call_steamcmd(params):
     os.system("{} {}".format(STEAM_CMD, params))
     print("")
 
+# Handle the password parameter.
+def handle_password():
+    if results.password_param:
+        log("Using password from parameter.")
+        STEAM_PASS = results.password_param
+    else:
+        log("Using hardcoded password variable.")
+
+# Use this to catch bad variables to make crashes more readable.
+def catch_empty():
+    print('do this later')
 
 def update_server():
-    steam_cmd_params  = " +login {}".format(STEAM_USER)
+    steam_cmd_params  = " +login {}".format(STEAM_USER, STEAM_PASS)
+    #steam_cmd_params  = " +login {}".format(STEAM_USER)
     steam_cmd_params += " +force_install_dir {}".format(A3_SERVER_DIR)
     steam_cmd_params += " +app_update {} validate".format(A3_SERVER_ID)
     steam_cmd_params += " +quit"
@@ -173,8 +194,8 @@ def update_mods():
         while os.path.isdir(path) == False and tries < 10:
             log("Updating \"{}\" ({}) | {}".format(mod_name, mod_id, tries + 1))
 
-            ## steam_cmd_params  = " +login {} {}".format(STEAM_USER, STEAM_PASS)
-            steam_cmd_params  = " +login {}".format(STEAM_USER)
+            steam_cmd_params  = " +login {} {}".format(STEAM_USER, STEAM_PASS)
+            ## steam_cmd_params  = " +login {}".format(STEAM_USER)
             steam_cmd_params += " +force_install_dir {}".format(A3_SERVER_DIR)
             steam_cmd_params += " +workshop_download_item {} {} validate".format(
                 A3_WORKSHOP_ID,
@@ -265,6 +286,9 @@ def save_starting_params():
     savefile("launchparam.cfg", starter, False)
     # Write the luanch param to a log to be stored for error checking.
     savefile("launchparam.log", starter, True)
+
+log("Starting Mod-Manager")
+handle_password()
 
 log("Updating A3 server ({})".format(A3_SERVER_ID))
 update_server()
