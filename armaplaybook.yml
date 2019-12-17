@@ -16,7 +16,7 @@
       default: "{{ steam_password_plaintext }}" # This default is only if you want to hardcode your password. Do so in vars.yml.
     
     - name: "steam_guard"
-      prompt: "If you have one, enter your Steam Guard Code Now" # This default is only if you want to hardcode your password.
+      prompt: "If you have one, enter your Steam Guard Code Now"
       private: no
 
   roles:
