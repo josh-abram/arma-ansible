@@ -206,18 +206,6 @@ def create_mod_symlinks():
         else:
             print("Mod '{}' does not exist! ({})".format(mod_name, real_path))
 
-def get_starting_params():
-    starter = "./arma3server \"-name=" + server_name + "\" \"-config=" + server_cfg + "\" \"-mods="
-    modstring = ""
-    for mod_name, mod_id in MODS.items():
-        modstring = modstring + mod_name + ";"
-    modstring = modstring[:-1]
-    starter = starter + modstring + "\""
-    f = open( 'arma3server.sh', 'w' )
-    f.write(str(starter))
-    f.close()
-    print (starter)
-
 ## Creates symlinks to keys, heavily based off:
 ## https://gist.github.com/Freddo3000/a5cd0494f649db75e43611122c9c3f15 by https://gist.github.com/Freddo3000
 def symlink_mod_keys():
@@ -253,6 +241,30 @@ def symlink_mod_keys():
             else:
                 print("\n ! The keys folder for {} doesn't exist. \n".format(modname))
 
+# Saves a file, syntax is savefile("The name of the file", "What you want to save into the file", "true = append to the file with a datetime, false = overwrite file.")
+def savefile(filename, filestring, log_true):
+    if log_true:
+        f = open( filename, 'a' )
+        f.write( "\n" + str(datetime.datetime.now())[:-7] + " " + str(filestring))
+        f.close()
+    else:
+        f = open( filename, 'w' )
+        f.write(str(filestring))
+        f.close()
+
+# Saves server starting param into launchparam.cfg, and logs server starting param into to launchparam.log.
+def save_starting_params():
+    starter = "./arma3server \"-name=" + server_name + "\" \"-config=" + server_cfg + "\" \"-mods="
+    modstring = ""
+    for mod_name, mod_id in MODS.items():
+        modstring = modstring + mod_name + ";"
+    modstring = modstring[:-1]
+    starter = starter + modstring + "\""
+    # Write the launch param to a file to be read by arma3server service. The file is called #launchparam.cfg
+    savefile("launchparam.cfg", starter, False)
+    # Write the luanch param to a log to be stored for error checking.
+    savefile("launchparam.log", starter, True)
+
 log("Updating A3 server ({})".format(A3_SERVER_ID))
 update_server()
 
@@ -274,6 +286,6 @@ create_mod_symlinks()
 log("Symlinking Keys...")
 symlink_mod_keys()
 
-log("Here is a server starting command: ")
-get_starting_params()
+log("Saving server starting param into launchparam.cfg, and logging to launchparam.log.")
+save_starting_params()
 log("Note, the mods may not be in the correct order. Mods load left to right.")
