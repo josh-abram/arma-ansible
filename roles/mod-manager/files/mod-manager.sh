@@ -32,6 +32,7 @@ import json
 import six
 import shutil
 import time
+import datetime as dt
 
 from datetime import datetime
 from urllib import request
@@ -245,7 +246,7 @@ def symlink_mod_keys():
 def savefile(filename, filestring, log_true):
     if log_true:
         f = open( filename, 'a' )
-        f.write( "\n" + str(datetime.datetime.now())[:-7] + " " + str(filestring))
+        f.write( "\n" + str(dt.datetime.now())[:-7] + " " + str(filestring))
         f.close()
     else:
         f = open( filename, 'w' )
