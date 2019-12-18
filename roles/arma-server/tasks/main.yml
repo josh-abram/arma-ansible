@@ -42,7 +42,7 @@
     owner: "{{ steamcmd_user }}"
     group: "{{ steamcmd_user }}"
 
-- name: fix steam permissions
+- name: Set steam user permissions
   file:
     path: "{{ steamcmd_user_home }}"
     recurse: yes
@@ -68,22 +68,8 @@
   become: yes
   become_user: "{{ steamcmd_user }}"
 
-- name: Building ARMA3 service file to /etc/systemd/system
-  template:
-    src: arma3server.service.j2
-    dest: "/etc/systemd/system/arma3server.service"
-    owner: "{{ steamcmd_user }}"
-    group: "{{ steamcmd_user }}"
-    #mode: '0600'
-
-- name: Enable ARMA3 service and run daemon reload
-  systemd:
-    name: arma3server
-    enabled: True
-    daemon_reload: yes
-
-- name: Starting ARMA3 service
-  service: 
-    name: arma3server
-    enabled: yes
-    state: started
+- name: Start ARMA Server with Screen
+  command: screen -S arma3server -d -m bash -c "{{ steam_server_directory }}start.sh"
+  register: output
+  become: yes
+  become_user: "{{ steamcmd_user }}"
