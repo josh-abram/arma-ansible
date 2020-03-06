@@ -1,3 +1,14 @@
+
+
+// Put the URL's for your mods in this folder.
+// "mod_url":"mod_name_override",
+// "url goes here":"If you don't want a mod name override, put "None" here.",
+// Examples:
+//  //  Download CBA_A3 with automatic naming.
+// "https://steamcommunity.com/sharedfiles/filedetails/?id=450814997":"",
+//  //  Download CBA_A3 and name it test.
+// "https://steamcommunity.com/sharedfiles/filedetails/?id=450814997":"test",
+
 {
     "https://steamcommunity.com/sharedfiles/filedetails/?id=450814997":"",
     "https://steamcommunity.com/sharedfiles/filedetails/?id=723217262":""
