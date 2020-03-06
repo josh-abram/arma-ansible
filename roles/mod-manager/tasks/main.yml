@@ -3,8 +3,12 @@
   copy:
     src: mod-manager.sh
     dest: "{{ steam_server_directory }}mod-manager.sh"
+    owner: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"
 
 - name: Copy Mod JSON to Server
   copy:
     src: mods.json
     dest: "{{ steam_server_directory }}mods.json"
+    owner: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"

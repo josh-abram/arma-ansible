@@ -19,9 +19,14 @@
     - rename
     - htop
     - nethogs
+    - ufw
 
 - name: create Arma profiles directorys
-  file: path="{{ steamcmd_user_home }}.local/share/{{ item }}" state=directory
+  file: 
+    path: "{{ steamcmd_user_home }}.local/share/{{ item }}" 
+    state: directory
+    owner: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"
   with_items:
     - "Arma 3"
     - "Arma 3 - Other Profiles"
