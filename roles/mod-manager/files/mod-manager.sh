@@ -32,15 +32,25 @@ import json
 import six
 import shutil
 import time
+import datetime as dt
+import argparse
 
 from datetime import datetime
 from urllib import request
+
+# Parse parameters.
+parser = argparse.ArgumentParser(description='Downloads Mods.')
+parser.add_argument('-p', action='store', dest='password_param',
+                    help='Provide password')
+results = parser.parse_args()
 
 ## Configuration information:
 # The location of your steamcmd install.
 STEAM_CMD = "/home/steam/steamcmd/steamcmd.sh"
 # Your steam username.
 STEAM_USER = "USERNAME"
+# Your steam account password.
+STEAM_PASS = ""
 # The appid of Arma 3's Dedicated server. You shouldn't need to change this.
 A3_SERVER_ID = "233780"
 # The location that arma3 dedicated server is installed.
@@ -98,9 +108,21 @@ def call_steamcmd(params):
     os.system("{} {}".format(STEAM_CMD, params))
     print("")
 
+# Handle the password parameter.
+def handle_password():
+    if results.password_param:
+        log("Using password from parameter.")
+        STEAM_PASS = results.password_param
+    else:
+        log("Using hardcoded password variable.")
+
+# Use this to catch bad variables to make crashes more readable.
+def catch_empty():
+    print('do this later')
 
 def update_server():
-    steam_cmd_params  = " +login {}".format(STEAM_USER)
+    steam_cmd_params  = " +login {}".format(STEAM_USER, STEAM_PASS)
+    #steam_cmd_params  = " +login {}".format(STEAM_USER)
     steam_cmd_params += " +force_install_dir {}".format(A3_SERVER_DIR)
     steam_cmd_params += " +app_update {} validate".format(A3_SERVER_ID)
     steam_cmd_params += " +quit"
@@ -172,8 +194,8 @@ def update_mods():
         while os.path.isdir(path) == False and tries < 10:
             log("Updating \"{}\" ({}) | {}".format(mod_name, mod_id, tries + 1))
 
-            ## steam_cmd_params  = " +login {} {}".format(STEAM_USER, STEAM_PASS)
-            steam_cmd_params  = " +login {}".format(STEAM_USER)
+            steam_cmd_params  = " +login {} {}".format(STEAM_USER, STEAM_PASS)
+            ## steam_cmd_params  = " +login {}".format(STEAM_USER)
             steam_cmd_params += " +force_install_dir {}".format(A3_SERVER_DIR)
             steam_cmd_params += " +workshop_download_item {} {} validate".format(
                 A3_WORKSHOP_ID,
@@ -205,15 +227,6 @@ def create_mod_symlinks():
                 print("Creating symlink '{}'...".format(link_path))
         else:
             print("Mod '{}' does not exist! ({})".format(mod_name, real_path))
-
-def get_starting_params():
-    starter = "./arma3server \"-name=" + server_name + "\" \"-config=" + server_cfg + "\" \"-mods="
-    modstring = ""
-    for mod_name, mod_id in MODS.items():
-        modstring = modstring + mod_name + ";"
-    modstring = modstring[:-1]
-    starter = starter + modstring + "\""
-    print (starter)
 
 ## Creates symlinks to keys, heavily based off:
 ## https://gist.github.com/Freddo3000/a5cd0494f649db75e43611122c9c3f15 by https://gist.github.com/Freddo3000
@@ -250,6 +263,33 @@ def symlink_mod_keys():
             else:
                 print("\n ! The keys folder for {} doesn't exist. \n".format(modname))
 
+# Saves a file, syntax is savefile("The name of the file", "What you want to save into the file", "true = append to the file with a datetime, false = overwrite file.")
+def savefile(filename, filestring, log_true):
+    if log_true:
+        f = open( filename, 'a' )
+        f.write( "\n" + str(dt.datetime.now())[:-7] + " " + str(filestring))
+        f.close()
+    else:
+        f = open( filename, 'w' )
+        f.write(str(filestring))
+        f.close()
+
+# Saves server starting param into launchparam.cfg, and logs server starting param into to launchparam.log.
+def save_starting_params():
+    starter = "./arma3server \"-name=" + server_name + "\" \"-config=" + server_cfg + "\" \"-mods="
+    modstring = ""
+    for mod_name, mod_id in MODS.items():
+        modstring = modstring + mod_name + ";"
+    modstring = modstring[:-1]
+    starter = starter + modstring + "\""
+    # Write the launch param to a file to be read by arma3server service. The file is called #launchparam.cfg
+    savefile("launchparam.cfg", starter, False)
+    # Write the luanch param to a log to be stored for error checking.
+    savefile("launchparam.log", starter, True)
+
+log("Starting Mod-Manager")
+handle_password()
+
 log("Updating A3 server ({})".format(A3_SERVER_ID))
 update_server()
 
@@ -271,6 +311,6 @@ create_mod_symlinks()
 log("Symlinking Keys...")
 symlink_mod_keys()
 
-log("Here is a server starting command: ")
-get_starting_params()
+log("Saving server starting param into launchparam.cfg, and logging to launchparam.log.")
+save_starting_params()
 log("Note, the mods may not be in the correct order. Mods load left to right.")

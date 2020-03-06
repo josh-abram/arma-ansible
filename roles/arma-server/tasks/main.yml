@@ -14,8 +14,9 @@
     pkg:
     - lib32gcc1
     - lib32stdc++6
-    - python
+    - python3
     - fail2ban
+    - rename
     - htop
     - nethogs
 
@@ -30,17 +31,30 @@
   file:
     path: "{{ steamcmd_directory }}"
     state: directory
+    owner: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"
 
 - name: unzip steamcmd tar
   unarchive:
     src: https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
     dest: "{{ steamcmd_directory }}"
     remote_src: yes
+    owner: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"
+
+- name: Set steam user permissions
+  file:
+    path: "{{ steamcmd_user_home }}"
+    recurse: yes
+    owner: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"
 
 - name: set steamcmd as executable
   file:
     path: "{{ steamcmd_directory }}steamcmd.sh"
     mode: +x
+    owner: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"
 
 - name: open firewall ports
   ufw:
@@ -49,6 +63,13 @@
     proto: udp
 
 - name: Run SteamCMD and Install ARMA (Will take a long time on first run)
-  shell: "./steamcmd.sh +login {{ steam_username }} {{ steam_password }} {{steam_guard}} +force_install_dir {{ steam_server_directory }} +app_update 233780 +quit"
-  args:
-    chdir: "{{ steamcmd_directory }}"
+  command: "{{ steamcmd_directory }}steamcmd.sh +login {{ steam_username }} {{ steam_password }} {{steam_guard}} +force_install_dir {{ steam_server_directory }} +app_update 233780 +quit"
+  register: output
+  become: yes
+  become_user: "{{ steamcmd_user }}"
+
+- name: Start ARMA Server with Screen
+  command: screen -S arma3server -d -m bash -c "{{ steam_server_directory }}start.sh"
+  register: output
+  become: yes
+  become_user: "{{ steamcmd_user }}"
