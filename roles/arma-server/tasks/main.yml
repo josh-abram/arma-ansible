@@ -73,8 +73,23 @@
   become: yes
   become_user: "{{ steamcmd_user }}"
 
+- name: Copy start.sh to server
+  copy:
+    src: start.sh
+    dest: "{{ steam_server_directory }}start.sh"
+    mode: +x
+    owner: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"
+
 - name: Start ARMA Server with Screen
-  command: screen -S arma3server -d -m bash -c "{{ steam_server_directory }}start.sh"
+  command: "{{ steam_server_directory }}start.sh"  #this is not starting a screen session for some reason
   register: output
   become: yes
   become_user: "{{ steamcmd_user }}"
+
+- name: Get server IP Address
+  ipify_facts:
+
+- name: Arma Server is Ready
+  debug: 
+    msg: Your ARMA server is ready! You can connect to it directly on the following IP {{ ipify_public_ip }}
