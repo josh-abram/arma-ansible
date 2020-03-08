@@ -43,7 +43,7 @@ from urllib import request
 parser = argparse.ArgumentParser(description='Downloads Mods.')
 parser.add_argument('-p', action='store', dest='password_param',help='Provide password')
 parser.add_argument('-u', action='store', dest='username_param',help='Provide username')
-parser.add_argument('-f', action='file', dest='modfile',help='Provide name of a json modfile.')
+parser.add_argument('-f', action='store', dest='modfile_name',help='Provide name of a json modfile.')
 results = parser.parse_args()
 
 ## Configuration information:
@@ -157,8 +157,14 @@ def update_server():
     call_steamcmd(steam_cmd_params)
 
 def get_mods_from_file():
+    if results.modfile_name:
+        modlist = results.modfile_name
+        print(modlist)
+    else:
+        modlist = "mods.json"
+        print(modlist)
     # Pull mods from mods.json
-    with open('mods.json', 'r') as handle:
+    with open(modlist, 'r') as handle:
         # Strip comments.
         fixed_json = ''.join(line for line in handle if not line.startswith('//'))
         modsfile = json.loads(fixed_json, object_hook=empty_strings2none)
