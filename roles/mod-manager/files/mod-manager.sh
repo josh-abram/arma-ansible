@@ -43,7 +43,7 @@ from urllib import request
 parser = argparse.ArgumentParser(description='Downloads Mods.')
 parser.add_argument('-p', action='store', dest='password_param',help='Provide password')
 parser.add_argument('-u', action='store', dest='username_param',help='Provide username')
-parser.add_argument('-f', action='file', dest='modfile',help='Provide name of a json modfile.')
+parser.add_argument('-f', action='store', dest='modfile_name',help='Provide name of a json modfile.')
 results = parser.parse_args()
 
 ## Configuration information:
