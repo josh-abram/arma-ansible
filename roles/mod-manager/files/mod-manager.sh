@@ -30,6 +30,7 @@ import os.path
 import re
 import json
 import six
+import sys
 import shutil
 import time
 import datetime as dt
@@ -40,16 +41,17 @@ from urllib import request
 
 # Parse parameters.
 parser = argparse.ArgumentParser(description='Downloads Mods.')
-parser.add_argument('-p', action='store', dest='password_param',
-                    help='Provide password')
+parser.add_argument('-p', action='store', dest='password_param',help='Provide password')
+parser.add_argument('-u', action='store', dest='username_param',help='Provide username')
+parser.add_argument('-f', action='file', dest='modfile',help='Provide name of a json modfile.')
 results = parser.parse_args()
 
 ## Configuration information:
 # The location of your steamcmd install.
 STEAM_CMD = "/home/steam/steamcmd/steamcmd.sh"
-# Your steam username.
-STEAM_USER = "USERNAME"
-# Your steam account password.
+# Your steam username, for if you want to hardcode it.
+STEAM_USER = ""
+# Your steam account password, for if you want to hardcode it.
 STEAM_PASS = ""
 # The appid of Arma 3's Dedicated server. You shouldn't need to change this.
 A3_SERVER_ID = "233780"
@@ -91,18 +93,26 @@ WORKSHOP_CHANGELOG_URL = "https://steamcommunity.com/sharedfiles/filedetails/cha
 mod_name_pattern = re.compile(r"(?:<title>Steam Workshop :: )(.+)(?:<.+>)")
 mod_id_pattern = re.compile(r"(?:\?id=)(.+)")
 
+class cl:
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    BOLD='\033[31m'
+    REG='\033[0;0m'
+
 def empty_strings2none(obj):
     for k, v in six.iteritems(obj):
         if v == '':
             obj[k] = None
     return obj
 
-def log(msg):
-    print("")
-    print("{{0:=<{}}}".format(len(msg)).format(""))
-    print(msg);
-    print("{{0:=<{}}}".format(len(msg)).format(""))
-
+def log(msg, type = 0):
+    if type == 1:
+        style = cl.BOLD + "{{0:!<{}}}" + cl.REG
+    else:
+        style = "{{0:=<{}}}"
+    print("\n" + style.format(len(msg)).format(""))
+    print(msg)
+    print(style.format(len(msg)).format(""))
 
 def call_steamcmd(params):
     os.system("{} {}".format(STEAM_CMD, params))
@@ -110,11 +120,28 @@ def call_steamcmd(params):
 
 # Handle the password parameter.
 def handle_password():
-    if results.password_param:
-        log("Using password from parameter.")
+    global STEAM_PASS
+    if STEAM_PASS:
+        log("{GREEN}Using hardcoded password variable.{REG}")
+    elif results.password_param:
+        log("{GREEN}Using password from parameter.{REG}")
         STEAM_PASS = results.password_param
     else:
-        log("Using hardcoded password variable.")
+        catch_account_fail("You must either provide a password with the -p parameter or hardcode it.")
+
+def handle_username():
+    global STEAM_USER
+    if STEAM_USER:
+        log("Using hardcoded username variable.")
+    elif results.username_param:
+        log("Using username from parameter.")
+        STEAM_USER = results.username_param
+    else:
+        catch_account_fail("You must either provide a password with the -u parameter or hardcode it.")
+
+def catch_account_fail(reason):
+    log(cl.RED + reason + "\nTo download mods from the Arma3 workshop, you MUST use an account that owns Arma3." + cl.REG, 1)
+    sys.exit()
 
 # Use this to catch bad variables to make crashes more readable.
 def catch_empty():
@@ -173,6 +200,7 @@ def get_mod_url_info():
         print(mod_name)
         # Append mods to list.
         MODS.update({mod_name:mod_id})
+        print(MODS)
 
 def update_mods():
     for mod_name, mod_id in MODS.items():
@@ -288,6 +316,7 @@ def save_starting_params():
     savefile("launchparam.log", starter, True)
 
 log("Starting Mod-Manager")
+handle_username()
 handle_password()
 
 log("Updating A3 server ({})".format(A3_SERVER_ID))
