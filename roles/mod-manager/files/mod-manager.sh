@@ -38,6 +38,7 @@ import argparse
 
 from datetime import datetime
 from urllib import request
+from getpass import getpass
 
 # Parse parameters.
 parser = argparse.ArgumentParser(description='Downloads Mods from the Arma3 Steam Workshop. \n NOTE: The account you use, MUST own a copy of Arma3.')
@@ -128,17 +129,22 @@ def handle_password():
         log("{GREEN}Using password from parameter.{REG}")
         STEAM_PASS = results.password_param
     else:
-        catch_account_fail("You must either provide a password with the -p parameter or hardcode it.")
+        STEAM_PASS = getpass("Enter your account password: ")
+        if not STEAM_PASS:
+            catch_account_fail("You must either provide a password with the -p parameter, enter it during runtime or hardcode it.")   
 
+# Handle the username parameter.
 def handle_username():
     global STEAM_USER
     if STEAM_USER:
         log("Using hardcoded username variable.")
     elif results.username_param:
-        log("Using username from parameter.")
+        log("Will login as " + results.username_param)
         STEAM_USER = results.username_param
     else:
-        catch_account_fail("You must either provide a password with the -u parameter or hardcode it.")
+        STEAM_USER = input("Enter your account username: ")
+        if not STEAM_USER:
+            catch_account_fail("You must either provide a username with the -u parameter, enter it during runtime or hardcode it.")
 
 def catch_account_fail(reason):
     log(cl.RED + reason + "\nTo download mods from the Arma3 workshop, you MUST use an account that owns Arma3." + cl.REG, 1)
