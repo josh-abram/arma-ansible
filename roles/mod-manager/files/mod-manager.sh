@@ -40,10 +40,11 @@ from datetime import datetime
 from urllib import request
 
 # Parse parameters.
-parser = argparse.ArgumentParser(description='Downloads Mods.')
-parser.add_argument('-p', action='store', dest='password_param',help='Provide password')
-parser.add_argument('-u', action='store', dest='username_param',help='Provide username')
-parser.add_argument('-f', action='store', dest='modfile_name',help='Provide name of a json modfile.')
+parser = argparse.ArgumentParser(description='Downloads Mods from the Arma3 Steam Workshop. \n NOTE: The account you use, MUST own a copy of Arma3.')
+parser.add_argument('-p', action='store', dest='password_param',help='Provide password.')
+parser.add_argument('-u', action='store', dest='username_param',help='Provide username.')
+parser.add_argument('-f', action='store', dest='modfile_name',help='Provide the name of a json modfile.')
+parser.add_argument('-w', action='store', dest='web_file_name',help='Provide the URL for a json modfile.')
 results = parser.parse_args()
 
 ## Configuration information:
@@ -156,20 +157,31 @@ def update_server():
 
     call_steamcmd(steam_cmd_params)
 
-def get_mods_from_file():
-    if results.modfile_name:
+def handle_modlist():
+    if results.web_file_name:
+        get_mods_from_url()
+    elif results.modfile_name:
         modlist = results.modfile_name
         print(modlist)
+        get_mods_from_file(modlist)
     else:
         modlist = "mods.json"
         print(modlist)
-    # Pull mods from mods.json
+        get_mods_from_file(modlist)
+
+def get_mods_from_file(modlist):
     with open(modlist, 'r') as handle:
         # Strip comments.
         fixed_json = ''.join(line for line in handle if not line.startswith('//'))
         modsfile = json.loads(fixed_json, object_hook=empty_strings2none)
     # Append to MODS_URL 
     MOD_URLS.update(modsfile)
+
+def get_mods_from_url():
+    with request.urlopen(results.web_file_name) as response:
+        with tempfile.NamedTemporaryFile(delete=False) as modlist:
+            shutil.copyfileobj(response, modlist)
+    get_mods_from_file(modlist.name)
 
 def mod_needs_update(mod_id, path):
     if os.path.isdir(path):
@@ -329,7 +341,7 @@ log("Updating A3 server ({})".format(A3_SERVER_ID))
 update_server()
 
 log("Getting mod URL's from mods.json")
-get_mods_from_file()
+handle_modlist()
 
 log("Trying to get mod info from URLs")
 get_mod_url_info()
