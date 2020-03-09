@@ -11,5 +11,9 @@
   copy:
     src: mods.json
     dest: "{{ steam_server_directory }}mods.json"
+    with_items:
+      - {src:"rhs.json", dest:"{{ steam_server_directory }}rhs.json"}
+      - {src:"cup.json", dest:"{{ steam_server_directory }}cup.json"}
+      - {src:"cup_terrains.json", dest:"{{ steam_server_directory }}cup_terrains.json"}
     owner: "{{ steamcmd_user }}"
     group: "{{ steamcmd_user }}"
