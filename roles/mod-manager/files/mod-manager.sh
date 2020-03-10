@@ -156,7 +156,6 @@ def catch_empty():
 
 def update_server():
     steam_cmd_params  = " +login {}".format(STEAM_USER, STEAM_PASS)
-    #steam_cmd_params  = " +login {}".format(STEAM_USER)
     steam_cmd_params += " +force_install_dir {}".format(A3_SERVER_DIR)
     steam_cmd_params += " +app_update {} validate".format(A3_SERVER_ID)
     steam_cmd_params += " +quit"
@@ -336,7 +335,7 @@ def save_starting_params():
     starter = starter + modstring + "\""
     # Write the launch param to a file to be read by arma3server service. The file is called #launchparam.cfg
     savefile("launchparam.cfg", starter, False)
-    # Write the luanch param to a log to be stored for error checking.
+    # Write the launch param to a log to be stored for error checking.
     savefile("launchparam.log", starter, True)
 
 log("Starting Mod-Manager")
