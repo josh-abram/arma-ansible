@@ -5,7 +5,7 @@
 Ansible Template and Roles for automating the setup of an ARMA 3 Server
 Note: Supports Ubuntu 18.04 only
 
-Still very much a work in progress.
+Still very much a work in progress. You can join the discord here: https://discord.gg/wN4xNZp
 
 Run with: ansible-playbook -i hosts --ask-pass armaplaybook.yml
 
