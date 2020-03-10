@@ -1,5 +1,5 @@
 ---
-steamcmd_user: steam
+steamcmd_user: steam # This user will be used to run steam CMD and the ARMA server
 steamcmd_user_home: /home/{{ steamcmd_user }}/
 steamcmd_directory: /home/{{ steamcmd_user }}/steamcmd/
 steam_server_directory: /home/{{ steamcmd_user }}/arma3/
