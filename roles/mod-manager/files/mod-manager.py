@@ -327,7 +327,7 @@ def savefile(filename, filestring, log_true):
 
 # Saves server starting param into launchparam.cfg, and logs server starting param into to launchparam.log.
 def save_starting_params():
-    starter = "./arma3server \"-name=" + server_name + "\" \"-config=" + server_cfg + "\" \"-mods="
+    starter = "./arma3server \"-name=" + server_name + "\" \"-config=" + server_cfg + "\" \"-mod="
     modstring = ""
     for mod_name, mod_id in MODS.items():
         modstring = modstring + mod_name + ";"
