@@ -42,10 +42,12 @@ from getpass import getpass
 
 # Parse parameters.
 parser = argparse.ArgumentParser(description='Downloads Mods from the Arma3 Steam Workshop. \n NOTE: The account you use, MUST own a copy of Arma3.')
-parser.add_argument('-p', action='store', dest='password_param',help='Provide password.')
-parser.add_argument('-u', action='store', dest='username_param',help='Provide username.')
-parser.add_argument('-f', action='store', dest='modfile_name',help='Provide the name of a json modfile.')
-parser.add_argument('-w', action='store', dest='web_file_name',help='Provide the URL for a json modfile.')
+parser.add_argument('-p','--password', action='store', dest='password_param',help='Provide password.')
+parser.add_argument('-u','--username', action='store', dest='username_param',help='Provide username.')
+parser.add_argument('-f','--modlist', action='store', dest='modfile_name',help='Provide the name of a json modfile.')
+parser.add_argument('-w','--weblocation', action='store', dest='web_file_name',help='Provide the URL for a json modfile.')
+parser.add_argument('-m','--multiload', action='store', dest='multiple_file_load',help='Provide a list of mod files you want to load, seperated by commas.')
+parser.add_argument('-d','--defer', action='store_true', dest='defer_upgrade_true',help='Provide the URL for a json modfile.')
 results = parser.parse_args()
 
 ## Configuration information:
@@ -153,6 +155,13 @@ def catch_account_fail(reason):
 # Use this to catch bad variables to make crashes more readable.
 def catch_empty():
     print('do this later')
+
+def handle_upgrade():
+    if results.defer_upgrade_true:
+        log("Defering server upgrade.")
+    else:
+        ("Updating A3 server ({})".format(A3_SERVER_ID))
+        update_server()
 
 def update_server():
     steam_cmd_params  = " +login {}".format(STEAM_USER, STEAM_PASS)
@@ -342,8 +351,7 @@ log("Starting Mod-Manager")
 handle_username()
 handle_password()
 
-log("Updating A3 server ({})".format(A3_SERVER_ID))
-update_server()
+handle_upgrade()
 
 log("Getting mod URL's from mods.json")
 handle_modlist()
