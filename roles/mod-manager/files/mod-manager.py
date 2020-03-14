@@ -38,12 +38,14 @@ import argparse
 
 from datetime import datetime
 from urllib import request
+from getpass import getpass
 
 # Parse parameters.
-parser = argparse.ArgumentParser(description='Downloads Mods.')
-parser.add_argument('-p', action='store', dest='password_param',help='Provide password')
-parser.add_argument('-u', action='store', dest='username_param',help='Provide username')
-parser.add_argument('-f', action='store', dest='modfile_name',help='Provide name of a json modfile.')
+parser = argparse.ArgumentParser(description='Downloads Mods from the Arma3 Steam Workshop. \n NOTE: The account you use, MUST own a copy of Arma3.')
+parser.add_argument('-p', action='store', dest='password_param',help='Provide password.')
+parser.add_argument('-u', action='store', dest='username_param',help='Provide username.')
+parser.add_argument('-f', action='store', dest='modfile_name',help='Provide the name of a json modfile.')
+parser.add_argument('-w', action='store', dest='web_file_name',help='Provide the URL for a json modfile.')
 results = parser.parse_args()
 
 ## Configuration information:
@@ -127,17 +129,22 @@ def handle_password():
         log("{GREEN}Using password from parameter.{REG}")
         STEAM_PASS = results.password_param
     else:
-        catch_account_fail("You must either provide a password with the -p parameter or hardcode it.")
+        STEAM_PASS = getpass("Enter your account password: ")
+        if not STEAM_PASS:
+            catch_account_fail("You must either provide a password with the -p parameter, enter it during runtime or hardcode it.")   
 
+# Handle the username parameter.
 def handle_username():
     global STEAM_USER
     if STEAM_USER:
         log("Using hardcoded username variable.")
     elif results.username_param:
-        log("Using username from parameter.")
+        log("Will login as " + results.username_param)
         STEAM_USER = results.username_param
     else:
-        catch_account_fail("You must either provide a password with the -u parameter or hardcode it.")
+        STEAM_USER = input("Enter your account username: ")
+        if not STEAM_USER:
+            catch_account_fail("You must either provide a username with the -u parameter, enter it during runtime or hardcode it.")
 
 def catch_account_fail(reason):
     log(cl.RED + reason + "\nTo download mods from the Arma3 workshop, you MUST use an account that owns Arma3." + cl.REG, 1)
@@ -149,21 +156,37 @@ def catch_empty():
 
 def update_server():
     steam_cmd_params  = " +login {}".format(STEAM_USER, STEAM_PASS)
-    #steam_cmd_params  = " +login {}".format(STEAM_USER)
     steam_cmd_params += " +force_install_dir {}".format(A3_SERVER_DIR)
     steam_cmd_params += " +app_update {} validate".format(A3_SERVER_ID)
     steam_cmd_params += " +quit"
 
     call_steamcmd(steam_cmd_params)
 
-def get_mods_from_file():
-    # Pull mods from mods.json
-    with open('mods.json', 'r') as handle:
+def handle_modlist():
+    if results.web_file_name:
+        get_mods_from_url()
+    elif results.modfile_name:
+        modlist = results.modfile_name
+        print(modlist)
+        get_mods_from_file(modlist)
+    else:
+        modlist = "mods.json"
+        print(modlist)
+        get_mods_from_file(modlist)
+
+def get_mods_from_file(modlist):
+    with open(modlist, 'r') as handle:
         # Strip comments.
         fixed_json = ''.join(line for line in handle if not line.startswith('//'))
         modsfile = json.loads(fixed_json, object_hook=empty_strings2none)
     # Append to MODS_URL 
     MOD_URLS.update(modsfile)
+
+def get_mods_from_url():
+    with request.urlopen(results.web_file_name) as response:
+        with tempfile.NamedTemporaryFile(delete=False) as modlist:
+            shutil.copyfileobj(response, modlist)
+    get_mods_from_file(modlist.name)
 
 def mod_needs_update(mod_id, path):
     if os.path.isdir(path):
@@ -304,7 +327,7 @@ def savefile(filename, filestring, log_true):
 
 # Saves server starting param into launchparam.cfg, and logs server starting param into to launchparam.log.
 def save_starting_params():
-    starter = "./arma3server \"-name=" + server_name + "\" \"-config=" + server_cfg + "\" \"-mods="
+    starter = "./arma3server \"-name=" + server_name + "\" \"-config=" + server_cfg + "\" \"-mod="
     modstring = ""
     for mod_name, mod_id in MODS.items():
         modstring = modstring + mod_name + ";"
@@ -312,7 +335,7 @@ def save_starting_params():
     starter = starter + modstring + "\""
     # Write the launch param to a file to be read by arma3server service. The file is called #launchparam.cfg
     savefile("launchparam.cfg", starter, False)
-    # Write the luanch param to a log to be stored for error checking.
+    # Write the launch param to a log to be stored for error checking.
     savefile("launchparam.log", starter, True)
 
 log("Starting Mod-Manager")
@@ -323,7 +346,7 @@ log("Updating A3 server ({})".format(A3_SERVER_ID))
 update_server()
 
 log("Getting mod URL's from mods.json")
-get_mods_from_file()
+handle_modlist()
 
 log("Trying to get mod info from URLs")
 get_mod_url_info()

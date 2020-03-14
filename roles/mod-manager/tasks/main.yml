@@ -1,15 +1,16 @@
 ---
 - name: Copy Mod Manager to Server
   copy:
-    src: mod-manager.sh
-    dest: "{{ steam_server_directory }}mod-manager.sh"
+    src: mod-manager.py
+    dest: "{{ steam_server_directory }}mod-manager.py"
     mode: +x
     owner: "{{ steamcmd_user }}"
     group: "{{ steamcmd_user }}"
 
 - name: Copy Mod JSON to Server
-  copy:
-    src: mods.json
-    dest: "{{ steam_server_directory }}mods.json"
-    owner: "{{ steamcmd_user }}"
-    group: "{{ steamcmd_user }}"
+  copy: src={{ item.src }} dest={{ item.dest }} owner={{ item.owner }} group={{ item.group }}
+  with_items:
+    - { src: "mods.json", dest: "{{ steam_server_directory }}mods.json", owner: "{{ steamcmd_user }}", group: "{{ steamcmd_user }}" }
+    - { src: "rhs.json", dest: "{{ steam_server_directory }}rhs.json", owner: "{{ steamcmd_user }}", group: "{{ steamcmd_user }}" }
+    - { src: "cup.json", dest: "{{ steam_server_directory }}cup.json", owner: "{{ steamcmd_user }}", group: "{{ steamcmd_user }}" }
+    - { src: "cup_terrains.json", dest: "{{ steam_server_directory }}cup_terrains.json", owner: "{{ steamcmd_user }}", group: "{{ steamcmd_user }}" }
