@@ -7,8 +7,12 @@ Note: Only tested on Ubuntu 18.04, in theory should work on any distro with apti
 
 Still very much a work in progress. You can join the discord here for support: https://discord.gg/wN4xNZp
 
-Run with: ansible-playbook -i hosts --ask-pass armaplaybook.yml
+Run with: 
+```shell
+ansible-playbook -i hosts --ask-pass armaplaybook.yml
+```
 
 If you want to run entirely by command line without editing the defaults or hosts files you can do this:
-
+```shell
 ansible-playbook -i hosts --user yoursudoer --ask-pass --become --ask-become-pass armaplaybook.yml -e "steam_username=username steam_password=password"
+```
