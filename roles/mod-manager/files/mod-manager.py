@@ -97,7 +97,7 @@ WORKSHOP_CHANGELOG_URL = "https://steamcommunity.com/sharedfiles/filedetails/cha
 mod_name_pattern = re.compile(r"(?:<title>Steam Workshop :: )(.+)(?:<.+>)")
 mod_id_pattern = re.compile(r"(?:\?id=)(.+)")
 
-class cl:
+class colour:
     RED='\033[0;31m'
     GREEN='\033[0;32m'
     BOLD='\033[31m'
@@ -111,7 +111,7 @@ def empty_strings2none(obj):
 
 def log(msg, type = 0):
     if type == 1:
-        style = cl.BOLD + "{{0:!<{}}}" + cl.REG
+        style = colour.BOLD + "{{0:!<{}}}" + colour.REG
     else:
         style = "{{0:=<{}}}"
     print("\n" + style.format(len(msg)).format(""))
@@ -149,7 +149,7 @@ def handle_username():
             catch_account_fail("You must either provide a username with the -u parameter, enter it during runtime or hardcode it.")
 
 def catch_account_fail(reason):
-    log(cl.RED + reason + "\nTo download mods from the Arma3 workshop, you MUST use an account that owns Arma3." + cl.REG, 1)
+    log(colour.RED + reason + "\nTo download mods from the Arma3 workshop, you MUST use an account that owns Arma3." + colour.REG, 1)
     sys.exit()
 
 # Use this to catch bad variables to make crashes more readable.
@@ -207,6 +207,7 @@ def get_mods_from_file(modlist):
         except:
             log('The file "{}" does not exist!'.format(x))
 
+# Check if a mod needs an update.
 def mod_needs_update(mod_id, path):
     if os.path.isdir(path):
         response = request.urlopen("{}/{}".format(WORKSHOP_CHANGELOG_URL, mod_id)).read()
