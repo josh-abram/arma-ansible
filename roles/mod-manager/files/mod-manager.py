@@ -35,6 +35,7 @@ import shutil
 import time
 import datetime as dt
 import argparse
+import tempfile
 
 from datetime import datetime
 from urllib import request
@@ -44,10 +45,9 @@ from getpass import getpass
 parser = argparse.ArgumentParser(description='Downloads Mods from the Arma3 Steam Workshop. \n NOTE: The account you use, MUST own a copy of Arma3.')
 parser.add_argument('-p','--password', action='store', dest='password_param',help='Provide password.')
 parser.add_argument('-u','--username', action='store', dest='username_param',help='Provide username.')
-parser.add_argument('-f','--modlist', action='store', dest='modfile_name',help='Provide the name of a json modfile.')
+parser.add_argument('-f','--modlist', action='store', dest='modfile_name',help='Provide the name of a json modfile, or a list of modfiles with their names seperated by commas.')
 parser.add_argument('-w','--weblocation', action='store', dest='web_file_name',help='Provide the URL for a json modfile.')
-parser.add_argument('-m','--multiload', action='store', dest='multiple_file_load',help='Provide a list of mod files you want to load, seperated by commas.')
-parser.add_argument('-d','--defer', action='store_true', dest='defer_upgrade_true',help='Provide the URL for a json modfile.')
+parser.add_argument('-d','--defer', action='store_true', dest='defer_upgrade_true',help='Defer server upgrade.')
 results = parser.parse_args()
 
 ## Configuration information:
@@ -97,7 +97,7 @@ WORKSHOP_CHANGELOG_URL = "https://steamcommunity.com/sharedfiles/filedetails/cha
 mod_name_pattern = re.compile(r"(?:<title>Steam Workshop :: )(.+)(?:<.+>)")
 mod_id_pattern = re.compile(r"(?:\?id=)(.+)")
 
-class cl:
+class colour:
     RED='\033[0;31m'
     GREEN='\033[0;32m'
     BOLD='\033[31m'
@@ -111,7 +111,7 @@ def empty_strings2none(obj):
 
 def log(msg, type = 0):
     if type == 1:
-        style = cl.BOLD + "{{0:!<{}}}" + cl.REG
+        style = colour.BOLD + "{{0:!<{}}}" + colour.REG
     else:
         style = "{{0:=<{}}}"
     print("\n" + style.format(len(msg)).format(""))
@@ -149,7 +149,7 @@ def handle_username():
             catch_account_fail("You must either provide a username with the -u parameter, enter it during runtime or hardcode it.")
 
 def catch_account_fail(reason):
-    log(cl.RED + reason + "\nTo download mods from the Arma3 workshop, you MUST use an account that owns Arma3." + cl.REG, 1)
+    log(colour.RED + reason + "\nTo download mods from the Arma3 workshop, you MUST use an account that owns Arma3." + colour.REG, 1)
     sys.exit()
 
 # Use this to catch bad variables to make crashes more readable.
@@ -172,10 +172,21 @@ def update_server():
     call_steamcmd(steam_cmd_params)
 
 def handle_modlist():
+    modlist = ""
     if results.web_file_name:
-        get_mods_from_url()
-    elif results.modfile_name:
-        modlist = results.modfile_name
+        # Opens the url provided and saves it as a temporary file, then appends the name of the temporary file to the mod string.
+        with request.urlopen(results.web_file_name) as response:
+            with tempfile.NamedTemporaryFile(delete=False) as modlist:
+                shutil.copyfileobj(response, modlist)
+                modlist = modlist.name + ","
+    if results.modfile_name:
+        modlist = modlist + results.modfile_name
+        print(modlist)
+        # Converts the modlist string to a list.
+        modlist = modlist.split(",")
+        # Strips leading or trailing spaces or returns, but leaves all others. 
+        # "  test " will become "test", " test file" will become "test file" etc.
+        modlist = list(map(lambda x : x.strip(), modlist))
         print(modlist)
         get_mods_from_file(modlist)
     else:
@@ -184,19 +195,19 @@ def handle_modlist():
         get_mods_from_file(modlist)
 
 def get_mods_from_file(modlist):
-    with open(modlist, 'r') as handle:
-        # Strip comments.
-        fixed_json = ''.join(line for line in handle if not line.startswith('//'))
-        modsfile = json.loads(fixed_json, object_hook=empty_strings2none)
-    # Append to MODS_URL 
-    MOD_URLS.update(modsfile)
+    for x in modlist:
+        try:
+            with open(x, 'r') as handle:
+            # Strip comments.
+                fixed_json = ''.join(line for line in handle if not line.startswith('//'))
+                modsfile = json.loads(fixed_json, object_hook=empty_strings2none)
+                print(x)
+            # Append to MODS_URL 
+            MOD_URLS.update(modsfile)
+        except:
+            log('The file "{}" does not exist!'.format(x))
 
-def get_mods_from_url():
-    with request.urlopen(results.web_file_name) as response:
-        with tempfile.NamedTemporaryFile(delete=False) as modlist:
-            shutil.copyfileobj(response, modlist)
-    get_mods_from_file(modlist.name)
-
+# Check if a mod needs an update.
 def mod_needs_update(mod_id, path):
     if os.path.isdir(path):
         response = request.urlopen("{}/{}".format(WORKSHOP_CHANGELOG_URL, mod_id)).read()
